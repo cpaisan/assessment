@@ -108,6 +108,7 @@ const DocumentsPage = props => {
   const { documents = [] } = props;
   const classes = useStyles();
   const totalSize = getTotalDocumentsSize(documents);
+
   return (
     <div className={classes.root}>
       <Searchbar classes={{ root: classes.searchbar }} />
