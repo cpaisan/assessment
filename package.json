@@ -17,7 +17,8 @@
     "react": "^16.8.6",
     "react-apollo": "^2.5.8",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "unfetch": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -29,6 +30,8 @@
       "BROWSER=none HTTPS=false REACT_APP_ENVIRONMENT=dev react-scripts start",
     "test":
       "start-server-and-test start:test http://localhost:3000/ cypress:interactive",
+    "start:mocking":
+      "REACT_APP_MOCKING=on REACT_APP_ENVIRONMENT=dev react-scripts start",
     "cypress:interactive": "TZ=UTC cypress open"
   },
   "eslintConfig": {

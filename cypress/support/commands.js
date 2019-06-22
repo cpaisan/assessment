@@ -23,3 +23,15 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+const routeGraphQl = (url, specifiedFixture) => {
+  const path = url.replace("/", "");
+  const file = specifiedFixture || "index";
+  const options = {
+    url: `/graphql/${path}`,
+    response: `fixture:graphql/${path}/${file}`,
+    method: "POST"
+  };
+  return cy.route(options);
+};
+
+Cypress.Commands.add("_routeGraphQl", routeGraphQl);
