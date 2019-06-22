@@ -28,7 +28,7 @@ const useStyles = makeStyles({
       "documents documents documents"
     `,
     gridTemplateColumns: "repeat(3, 1fr)",
-    gridTemplateRows: "50px 40px 60px auto"
+    gridTemplateRows: "60px 40px 60px auto"
   },
   searchbar: {
     gridArea: "searchbar",
@@ -36,8 +36,7 @@ const useStyles = makeStyles({
   },
   uploadButton: {
     gridArea: "uploadButton",
-    width: 120,
-    height: 40,
+
     justifySelf: "end",
     alignSelf: "center"
   },

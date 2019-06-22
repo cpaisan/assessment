@@ -12,6 +12,7 @@ const typeDefs = `
   input DocumentInput {
     name: String!
     size: Int!
+    type: String!
   }
 
   type Query {
@@ -19,9 +20,11 @@ const typeDefs = `
   }
 
   type Mutation {
-    uploadDocument(document: DocumentInput!): Document
+    uploadDocument(file: Upload!): Document
     deleteDocument(id: ID!): Boolean!
   }
+
+  scalar Upload
 `;
 
 const schema = makeExecutableSchema({ typeDefs });
