@@ -93,4 +93,20 @@ describe("Documents Page", () => {
     getTestId("DocumentCard-deleteButton-4").click();
     getTestId("DocumentCard-error-4").should("contain", "Please try again.");
   });
+
+  it("should search for documents", () => {
+    cy._routeGraphQl("documents", "/bazSearch.json").as("searchDocuments");
+    getTestId("Searchbar-input").type("baz");
+    cy.wait("@searchDocuments");
+    // Check for updated header
+    getTestId("DocumentsPage-header").should("contain", "1 documents");
+    // Check for updated total size
+    getTestId("DocumentsPage-totalSize").should("contain", "Total size: 520kb");
+    // There should only be one document card
+    cy.get('[data-test-id*="DocumentCard-name"]').should("have.length", 1);
+    // Check document card for correct values
+    getTestId("DocumentCard-name-baz").should("contain", "baz");
+    getTestId("DocumentCard-size-520").should("contain", "520kb");
+    getTestId("DocumentCard-deleteButton-3").should("exist");
+  });
 });

@@ -1,0 +1,7 @@
+{
+  "data": {
+    "documents": [
+      { "id": "3", "name": "baz", "size": 520, "__typename": "Document" }
+    ]
+  }
+}

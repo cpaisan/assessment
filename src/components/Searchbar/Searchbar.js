@@ -31,6 +31,11 @@ const Searchbar = props => {
       className={classes.root}
       value={searchText}
       onChange={onChange}
+      InputProps={{
+        inputProps: {
+          "data-test-id": "Searchbar-input"
+        }
+      }}
     />
   );
 };
