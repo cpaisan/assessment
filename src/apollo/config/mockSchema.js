@@ -15,13 +15,12 @@ const typeDefs = `
   }
 
   type Query {
-    documents: [Document]!
+    documents(search: String): [Document]!
   }
 
   type Mutation {
     uploadDocument(document: DocumentInput!): Document
     deleteDocument(id: ID!): Boolean!
-    searchDocuments(search: String): [Document]!
   }
 `;
 

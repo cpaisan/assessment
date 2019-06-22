@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // HoC
 import { makeStyles } from "@material-ui/core/styles";
@@ -105,13 +105,21 @@ const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
 
 const DocumentsPage = props => {
-  const { documents = [] } = props;
+  const { documents = [], onSearch } = props;
+  // State
+  const [searchText, setSearchText] = useState("");
+
   const classes = useStyles();
   const totalSize = getTotalDocumentsSize(documents);
 
   return (
     <div className={classes.root}>
-      <Searchbar classes={{ root: classes.searchbar }} />
+      <Searchbar
+        classes={{ root: classes.searchbar }}
+        searchText={searchText}
+        setSearchText={setSearchText}
+        onChange={onSearch}
+      />
       <UploadButton classes={{ root: classes.uploadButton }} />
       <Typography
         className={classes.header}
@@ -131,7 +139,21 @@ const DocumentsPage = props => {
 };
 
 const documentsQueryConfig = {
-  props: ({ data: { documents = [] } }) => ({ documents })
+  props: ({ data: { documents = [], fetchMore } }) => ({
+    documents,
+    onSearch: searchText =>
+      fetchMore({
+        variables: { search: searchText },
+        query: Queries.DocumentsQuery,
+        updateQuery: (prev, { fetchMoreResult }) => {
+          const { documents: documentsResults = [] } = fetchMoreResult || {};
+          return {
+            ...prev,
+            documents: documentsResults
+          };
+        }
+      })
+  })
 };
 
 export default graphql(Queries.DocumentsQuery, documentsQueryConfig)(

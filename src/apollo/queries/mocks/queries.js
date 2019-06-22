@@ -1,7 +1,11 @@
-import { MockList } from "graphql-tools";
+import { mockDocuments } from "./documentsQuery";
 
 export default {
   Query: () => ({
-    documents: () => new MockList(10)
+    documents: (_, { search = "" }) => {
+      return mockDocuments.filter(({ name }) =>
+        name.toLowerCase().includes((search || "").toLowerCase())
+      );
+    }
   })
 };
