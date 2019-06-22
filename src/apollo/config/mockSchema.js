@@ -19,7 +19,7 @@ const typeDefs = `
   }
 
   type Mutation {
-    uploadDocument(document: DocumentInput!): DocumentInput
+    uploadDocument(document: DocumentInput!): Document
     deleteDocument(documentId: ID!): Boolean!
     searchDocuments(search: String): [Document]!
   }

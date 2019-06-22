@@ -2,6 +2,7 @@ import React from "react";
 
 // HoC
 import { makeStyles } from "@material-ui/core/styles";
+import { graphql } from "react-apollo";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
@@ -10,6 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import Searchbar from "components/Searchbar";
 import DocumentCard from "components/DocumentCard";
 import UploadButton from "components/UploadButton";
+
+// GraphQL
+import * as Queries from "apollo/queries";
 
 const useStyles = makeStyles({
   root: {
@@ -92,10 +96,7 @@ const useStyles = makeStyles({
     }
   }
 });
-const mockDocs = [
-  { name: "foo", size: 3, id: "foo" },
-  { name: "bar", size: 4, id: "bar" }
-];
+
 /**
  * @param {arr[obj]} documents
  * @return {int}
@@ -104,8 +105,8 @@ const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
 
 const DocumentsPage = props => {
-  const classes = useStyles();
   const { documents = [] } = props;
+  const classes = useStyles();
   const totalSize = getTotalDocumentsSize(documents);
   return (
     <div className={classes.root}>
@@ -119,10 +120,16 @@ const DocumentsPage = props => {
         variant="h5"
       >{`Total size: ${totalSize}kb`}</Typography>
       <div className={classes.documentContainer}>
-        {mockDocs.map(doc => <DocumentCard doc={doc} key={doc.id} />)}
+        {documents.map(doc => <DocumentCard doc={doc} key={doc.id} />)}
       </div>
     </div>
   );
 };
 
-export default DocumentsPage;
+const documentsQueryConfig = {
+  props: ({ data: { documents = [] } }) => ({ documents })
+};
+
+export default graphql(Queries.DocumentsQuery, documentsQueryConfig)(
+  DocumentsPage
+);
