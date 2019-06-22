@@ -70,12 +70,20 @@ const UploadButton = props => {
   return (
     <div className={upstreamClasses.root}>
       {error && (
-        <Typography className={classes.error} variant="body2">
+        <Typography
+          className={classes.error}
+          variant="body2"
+          data-test-id="UploadButton-error"
+        >
           {error}
         </Typography>
       )}
       {success && (
-        <Typography className={classes.success} variant="body2">
+        <Typography
+          className={classes.success}
+          variant="body2"
+          data-test-id="UploadButton-success"
+        >
           File uploaded successfully!
         </Typography>
       )}
@@ -85,6 +93,7 @@ const UploadButton = props => {
         id="upload-input"
         className={classes.input}
         onChange={onChange}
+        data-test-id="UploadButton-input"
       />
       <label htmlFor="upload-input" className={classes.label}>
         <Button
@@ -92,6 +101,7 @@ const UploadButton = props => {
           color="primary"
           component="span"
           className={classes.root}
+          data-test-id="UploadButton-button"
         >
           Upload
         </Button>

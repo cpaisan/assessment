@@ -1,0 +1,10 @@
+{
+  "data": {
+    "uploadDocument": {
+      "name": "google.jpg",
+      "id": "8",
+      "size": 100,
+      "__typename": "Document"
+    }
+  }
+}

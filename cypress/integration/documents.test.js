@@ -13,15 +13,29 @@ const getTestId = testId => cy.get(`[data-test-id="${testId}"]`);
 const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
 
+const {
+  data: { documents = [] }
+} = documentsData;
+
+const uploadFile = () =>
+  cy.fixture("/images/google.jpg").then(base64String => {
+    cy.get('[data-test-id="UploadButton-input"]').then(el => {
+      Cypress.Blob.base64StringToBlob(base64String, "image/jpeg").then(blob => {
+        const file = new File([blob], "google.jpg", { type: "image/jpeg" });
+        const dataTransfer = new DataTransfer();
+        const input = el[0];
+        dataTransfer.items.add(file);
+        input.files = dataTransfer.files;
+        cy.wrap(el).trigger("change", { force: true });
+      });
+    });
+  });
+
 describe("Documents Page", () => {
   beforeEach(() => {
     cy._routeGraphQl("/documents");
     cy.visit("/");
   });
-
-  const {
-    data: { documents = [] }
-  } = documentsData;
 
   it("should load documents", () => {
     // Check for correct header
@@ -108,5 +122,45 @@ describe("Documents Page", () => {
     getTestId("DocumentCard-name-baz").should("contain", "baz");
     getTestId("DocumentCard-size-520").should("contain", "520kb");
     getTestId("DocumentCard-deleteButton-3").should("exist");
+  });
+
+  it("should upload a file", () => {
+    cy._routeGraphQl("uploadDocument").as("uploadDocument");
+    uploadFile();
+
+    cy.wait("@uploadDocument");
+    // Check for success message
+    getTestId("UploadButton-success").should(
+      "contain",
+      "File uploaded successfully!"
+    );
+    // Check the documents page for correct updates
+    getTestId("DocumentsPage-header").should("contain", "5 documents");
+    getTestId("DocumentsPage-totalSize").should(
+      "contain",
+      "Total size: 1320kb"
+    );
+    cy.get('[data-test-id*="DocumentCard-root"]').should("have.length", 5);
+    getTestId("DocumentCard-name-google.jpg").should("contain", "google.jpg");
+    getTestId("DocumentCard-size-100").should("contain", "100kb");
+    getTestId("DocumentCard-deleteButton-8").should("exist");
+  });
+
+  it("should handle a failed file upload", () => {
+    cy._routeGraphQl("uploadDocument", "/failedUpload.json").as(
+      "uploadDocument"
+    );
+    uploadFile();
+
+    cy.wait("@uploadDocument");
+    getTestId("UploadButton-error").should(
+      "contain",
+      "There was an error uploading the file. Please try again."
+    );
+  });
+
+  it("should handle a server error during file upload", () => {
+    uploadFile();
+    getTestId("UploadButton-error").should("contain", "Please try again.");
   });
 });
