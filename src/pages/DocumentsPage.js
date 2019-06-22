@@ -113,12 +113,15 @@ const DocumentsPage = props => {
     <div className={classes.root}>
       <Searchbar classes={{ root: classes.searchbar }} />
       <UploadButton classes={{ root: classes.uploadButton }} />
-      <Typography className={classes.header} variant="h3">{`${
-        documents.length
-      } documents`}</Typography>
+      <Typography
+        className={classes.header}
+        variant="h3"
+        data-test-id="DocumentsPage-header"
+      >{`${documents.length} documents`}</Typography>
       <Typography
         className={classes.totalSize}
         variant="h5"
+        data-test-id="DocumentsPage-totalSize"
       >{`Total size: ${totalSize}kb`}</Typography>
       <div className={classes.documentContainer}>
         {documents.map(doc => <DocumentCard doc={doc} key={doc.id} />)}

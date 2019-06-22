@@ -34,12 +34,9 @@ const useStyles = makeStyles({
     justifySelf: "end"
   }
 });
-const DocumentCard = ({ doc: { name = "", size } = {} }) => {
   const classes = useStyles();
   return (
-    <Card>
       <CardContent classes={{ root: classes.content }}>
-        <Typography className={classes.title}>{name}</Typography>
         <Typography
           className={classes.size}
           variant="body2"

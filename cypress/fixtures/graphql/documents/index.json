@@ -1,0 +1,10 @@
+{
+  "data": {
+    "documents": [
+      { "id": "1", "name": "foo", "size": 200, "__typename": "Document" },
+      { "id": "2", "name": "bar", "size": 100, "__typename": "Document" },
+      { "id": "3", "name": "baz", "size": 520, "__typename": "Document" },
+      { "id": "4", "name": "qux", "size": 400, "__typename": "Document" }
+    ]
+  }
+}
