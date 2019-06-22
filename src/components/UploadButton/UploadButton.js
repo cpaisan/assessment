@@ -4,7 +4,12 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 
 const UploadButton = props => {
-  return <Button>Upload</Button>;
+  const { classes } = props;
+  return (
+    <Button className={classes.root} variant="contained" color="primary">
+      Upload
+    </Button>
+  );
 };
 
 export default UploadButton;
