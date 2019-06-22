@@ -1,1 +1,5 @@
-export default {};
+export default {
+  Mutation: () => ({
+    deleteDocument: () => true
+  })
+};
