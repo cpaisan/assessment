@@ -82,7 +82,14 @@ const DocumentCard = ({
           variant="body2"
           data-test-id={`DocumentCard-size-${size}`}
         >{`${size}kb`}</Typography>
-        {error && <Typography className={classes.error}>{error}</Typography>}
+        {error && (
+          <Typography
+            className={classes.error}
+            data-test-id={`DocumentCard-error-${id}`}
+          >
+            {error}
+          </Typography>
+        )}
         <Button
           variant="contained"
           color="primary"
