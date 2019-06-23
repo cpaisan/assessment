@@ -17,15 +17,10 @@
   "scripts": {
     "start": "react-scripts start & npm run server:mock",
     "build": "react-scripts build",
-    "test":
-      "start-server-and-test start:test http://localhost:3000/ cypress:interactive",
+    "test": "start-server-and-test start:test http://localhost:3000/ cypress:interactive",
     "eject": "react-scripts eject",
-    "start:test":
-      "BROWSER=none HTTPS=false REACT_APP_ENVIRONMENT=dev react-scripts start",
-    "test":
-      "start-server-and-test start:test http://localhost:3000/ cypress:interactive",
-    "start:mocking":
-      "REACT_APP_MOCKING=on REACT_APP_ENVIRONMENT=dev react-scripts start",
+    "start:test": "BROWSER=none HTTPS=false REACT_APP_ENVIRONMENT=dev react-scripts start",
+    "start:mocking": "REACT_APP_MOCKING=on REACT_APP_ENVIRONMENT=dev react-scripts start",
     "cypress:interactive": "TZ=UTC cypress open",
     "server:mock": "nodemon mock_api/server.js"
   },
@@ -33,7 +28,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -44,6 +43,7 @@
     "cypress": "^3.3.1",
     "json-server": "^0.15.0",
     "multer": "^1.4.1",
+    "nodemon": "^1.19.1",
     "start-server-and-test": "^1.9.1"
   }
 }
