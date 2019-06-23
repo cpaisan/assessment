@@ -1,68 +1,76 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Charlie Paisan - 6/23/19
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+To install dependencies run:
 
-### `npm start`
+```
+yarn
+```
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To start the app run:
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+```
+yarn start:mocking
+```
 
-### `npm test`
+## Security
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Requests are currently made via HTTP - Remediate by configuring SSL certificate on the server
+- There is no user authentication, user authorization or access control in place - Remediate by implementing user authentication and authorization to only allow authorized users to upload files
+- File names are not sanitized - Remediate by sanitizing and escaping file names to avoid XSS attacks
+- Backend validation is missing - Remediate by validating payloads before saving to the database
+- Document ID's are currently integers that range from 1 - 10,000, which exposes a vulnerability for attackers to query a `documents` endpoint to possibly view documents that other users have uploaded - Remediate by using `uuid`'s so attackers cannot increment or decrement through document id's and implement proper access control depending on how the app is being used
 
-### `npm run build`
+## Improvements
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Identify a way to better handle errors uniformly across the app. Maybe a snackbar to notify users of success/failures.
+- Support multi-file upload and create a modal to implement a drag-and-drop feature for uploading. The modal would then also notify the users of which documents were successfully uploaded and which weren't.
+- Add a delete confirmation modal to confirm the correct document is being deleted.
+- Add pagination or infinite scroll to scale the app when users upload more documents.
+- Add authentication and access control.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Libraries
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Material UI: Fully styled components with easy-to-use API
+- Apollo: GraphQL API layer to handle query and mutation requests to the API
+- Cypress: Testing tool that provides developer friendly tools to debug and write tests and encourage TDD
+- Lodash.debounce: Debounced is used to throttle requests to the API.
+- Unfetch: Used to replace `fetch` to allow for graphQL requests in Cypress, because Cypress uses `XHR` requests and not currently support `fetch`
 
-### `npm run eject`
+## API
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+GraphQL queries are similar to HTTP `GET` requests, because they only request a resource and are not meant to handle any mutations.
+GraphQL mutations are similar to HTTP `POST, PUT, PATCH, DELETE` requests, because they modify or create a new resource.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The app has one object type, `Document`, which is an object with id, name, and size as keys and a unique human readable ID, string, and integer as their values, respectively.
+The `documents` query accepts one argument, `search`, which is used to filter `documents` matching the search string and returns an array of object type `Document`s. This query returns all documents if the `search` argument is `empty` or `null`
+`uploadDocument` is the mutation used to create new documents and accepts the input type, `documentInput`, as an argument and returns an object type `Document`, which includes an `id` created by the server.
+Lastly, the `deleteDocument` mutation accepts one argument, `id`, which is the document ID that will be deleted. This mutation returns `true` is the document is successfully deleted and `false` if there was an error and it was not deleted.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+ type Document {
+    id: ID
+    name: String!
+    size: Int!
+  }
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  input DocumentInput {
+    name: String!
+    size: Int!
+    type: String!
+  }
 
-## Learn More
+  type Query {
+    documents(search: String): [Document]!
+  }
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  type Mutation {
+    uploadDocument(file: Upload!): Document
+    deleteDocument(id: ID!): Boolean!
+  }
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  scalar Upload
+```
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+---
