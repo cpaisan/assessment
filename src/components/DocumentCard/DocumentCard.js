@@ -9,6 +9,10 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
+// Utilities
+import axios from "axios";
+import apiUrl from "config/constants/apiServer";
+
 const useStyles = makeStyles({
   content: {
     display: "grid",
@@ -41,29 +45,36 @@ const useStyles = makeStyles({
   }
 });
 
+const handleDelete = (id, setError, deleteCallback) =>
+  axios
+    .delete(`${apiUrl}/documents/${id}`)
+    .then(({ status }) => {
+      // Check for successful document deletion
+      if (status === 200) {
+        deleteCallback && deleteCallback(id);
+      }
+    })
+    .catch(({ response }) => {
+      const { status } = response;
+      if (status > 400 && status < 500) {
+        setError(
+          "An error occured while trying to delete this document. Please try again."
+        );
+        return;
+      }
+      // Server error
+      if (status >= 500) {
+        setError("Please try again.");
+        return;
+      }
+    });
+
 const DocumentCard = ({
   doc: { name = "", size, id } = {},
   deleteDocument
 }) => {
   const classes = useStyles();
   const [error, setError] = useState(null);
-
-  const handleDelete = () => {
-    // TODO: Replace with ajax request
-    deleteDocument()
-      .then(({ data: { deleteDocument } }) => {
-        // Check for successful document deletion
-        if (!deleteDocument) {
-          setError(
-            "An error occured while trying to delete this document. Please try again."
-          );
-        }
-      })
-      // Network error
-      .catch(err => {
-        setError("Please try again.");
-      });
-  };
 
   return (
     <Card data-test-id={`DocumentCard-root-${id}`}>
@@ -91,7 +102,7 @@ const DocumentCard = ({
           variant="contained"
           color="primary"
           className={classes.deleteButton}
-          onClick={handleDelete}
+          onClick={() => handleDelete(id, setError, deleteDocument)}
           data-test-id={`DocumentCard-deleteButton-${id}`}
         >
           Delete

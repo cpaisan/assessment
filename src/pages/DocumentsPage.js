@@ -106,6 +106,14 @@ const useStyles = makeStyles({
 const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
 
+/**
+ * @param {string, arr[obj], func}  id - document id to remove, documents - array of all documents,
+ * setDocuments - to update the component state with the updated documents array
+ * @return {arr[obj]} Updated document array with the corresponding document of the id removed
+ */
+const deleteDocument = (documents, setDocuments) => docId =>
+  setDocuments(documents.filter(({ id }) => id !== docId));
+
 const DocumentsPage = props => {
   // TODO: Replace onSearch with ajax request
   const { onSearch } = props;
@@ -152,7 +160,13 @@ const DocumentsPage = props => {
             There was an error loading the documents.
           </Typography>
         )}
-        {documents.map(doc => <DocumentCard doc={doc} key={doc.id} />)}
+        {documents.map(doc => (
+          <DocumentCard
+            doc={doc}
+            key={doc.id}
+            deleteDocument={deleteDocument(documents, setDocuments)}
+          />
+        ))}
       </div>
     </div>
   );
