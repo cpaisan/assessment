@@ -114,13 +114,33 @@ const getTotalDocumentsSize = documents =>
 const deleteDocument = (documents, setDocuments) => docId =>
   setDocuments(documents.filter(({ id }) => id !== docId));
 
+/**
+ * @param {func, string} setDocuments - update documents after search result is received
+ * searchText - string to search document names by
+ * @return {Promise} returns axios promise
+ */
+const onSearch = (setDocuments, setSearchError) => searchText => {
+  const getUrl = `${apiUrl}/documents?name=${searchText}`;
+  return axios
+    .get(getUrl)
+    .then(({ status, data = [] }) => {
+      if (status === 200) {
+        setDocuments(data);
+        setSearchError(false);
+      }
+    })
+    .catch(err => {
+      setSearchError(true);
+    });
+};
+
 const DocumentsPage = props => {
-  // TODO: Replace onSearch with ajax request
-  const { onSearch } = props;
   // State
   const [searchText, setSearchText] = useState("");
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState(false);
+  const [searchError, setSearchError] = useState(false);
+
   useEffect(() => {
     axios
       .get(`${apiUrl}/documents`)
@@ -141,7 +161,8 @@ const DocumentsPage = props => {
         classes={{ root: classes.searchbar }}
         searchText={searchText}
         setSearchText={setSearchText}
-        onChange={onSearch}
+        onChange={onSearch(setDocuments, setSearchError)}
+        searchError={searchError}
       />
       <UploadButton classes={{ root: classes.uploadButton }} />
       <Typography

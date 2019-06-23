@@ -16,7 +16,8 @@ const Searchbar = props => {
     classes,
     onChange: upstreamOnChange,
     searchText,
-    setSearchText
+    setSearchText,
+    searchError
   } = props;
 
   const onChange = ({ target: { value } }) => {
@@ -36,6 +37,11 @@ const Searchbar = props => {
           "data-test-id": "Searchbar-input"
         }
       }}
+      error={searchError}
+      helperText={
+        searchError &&
+        "There was an error while searching documents. Please try again."
+      }
     />
   );
 };

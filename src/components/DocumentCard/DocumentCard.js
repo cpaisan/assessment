@@ -55,7 +55,7 @@ const handleDelete = (id, setError, deleteCallback) =>
       }
     })
     .catch(({ response }) => {
-      const { status } = response;
+      const { status } = response || {};
       if (status > 400 && status < 500) {
         setError(
           "An error occured while trying to delete this document. Please try again."
