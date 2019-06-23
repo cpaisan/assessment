@@ -2,17 +2,12 @@ import React, { useState } from "react";
 
 // HoC
 import { makeStyles } from "@material-ui/core/styles";
-import { graphql } from "react-apollo";
 
 // Material UI
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
-// GraphQL
-import * as Mutations from "apollo/mutations";
-import * as Queries from "apollo/queries";
 
 const useStyles = makeStyles({
   content: {
@@ -45,6 +40,7 @@ const useStyles = makeStyles({
     gridArea: "error"
   }
 });
+
 const DocumentCard = ({
   doc: { name = "", size, id } = {},
   deleteDocument
@@ -53,6 +49,7 @@ const DocumentCard = ({
   const [error, setError] = useState(null);
 
   const handleDelete = () => {
+    // TODO: Replace with ajax request
     deleteDocument()
       .then(({ data: { deleteDocument } }) => {
         // Check for successful document deletion
@@ -104,25 +101,4 @@ const DocumentCard = ({
   );
 };
 
-const deleteDocumentConfig = {
-  props: ({ mutate, ownProps: { doc: { id } = {} } = {} }) => ({
-    deleteDocument: () => mutate({ variables: { id } })
-  }),
-  options: ({ doc: { id } = {} } = {}) => ({
-    update: (store, { data: { deleteDocument } }) => {
-      // Remove the deleted document from the cache
-      if (deleteDocument) {
-        const data = store.readQuery({ query: Queries.DocumentsQuery });
-        const updatedData = {
-          ...data,
-          documents: data.documents.filter(({ id: docId }) => docId !== id)
-        };
-        store.writeQuery({ query: Queries.DocumentsQuery, data: updatedData });
-      }
-    }
-  })
-};
-
-export default graphql(Mutations.DeleteDocument, deleteDocumentConfig)(
-  DocumentCard
-);
+export default DocumentCard;

@@ -2,15 +2,10 @@ import React, { useState } from "react";
 
 // HoC
 import { makeStyles } from "@material-ui/core/styles";
-import { graphql } from "react-apollo";
 
 // Material UI
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-
-// GraphQL
-import * as Mutations from "apollo/mutations";
-import * as Queries from "apollo/queries";
 
 const useStyles = makeStyles({
   root: {
@@ -53,6 +48,7 @@ const UploadButton = props => {
       setStatus({ error: "Invalid file type.", success: false });
       return;
     }
+    // TODO: Replace with ajax request
     uploadDocument(file)
       .then(({ data: { uploadDocument: { id } = {} } = {} }) => {
         if (id) {
@@ -110,24 +106,4 @@ const UploadButton = props => {
   );
 };
 
-const uploadDocumentConfig = {
-  props: ({ mutate }) => ({
-    uploadDocument: file => mutate({ variables: { file } })
-  }),
-  options: () => ({
-    update: (store, { data: { uploadDocument } }) => {
-      if (uploadDocument.id) {
-        const data = store.readQuery({ query: Queries.DocumentsQuery });
-        const updatedData = {
-          ...data,
-          documents: [uploadDocument, ...data.documents]
-        };
-        store.writeQuery({ query: Queries.DocumentsQuery, data: updatedData });
-      }
-    }
-  })
-};
-
-export default graphql(Mutations.UploadDocument, uploadDocumentConfig)(
-  UploadButton
-);
+export default UploadButton;

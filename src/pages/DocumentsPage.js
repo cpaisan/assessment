@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 // HoC
 import { makeStyles } from "@material-ui/core/styles";
-import { graphql } from "react-apollo";
 
 // Material UI
 import Typography from "@material-ui/core/Typography";
@@ -11,9 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import Searchbar from "components/Searchbar";
 import DocumentCard from "components/DocumentCard";
 import UploadButton from "components/UploadButton";
-
-// GraphQL
-import * as Queries from "apollo/queries";
 
 const useStyles = makeStyles({
   root: {
@@ -104,6 +100,7 @@ const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
 
 const DocumentsPage = props => {
+  // TODO: Replace onSearch with ajax request
   const { documents = [], onSearch } = props;
   // State
   const [searchText, setSearchText] = useState("");
@@ -137,24 +134,4 @@ const DocumentsPage = props => {
   );
 };
 
-const documentsQueryConfig = {
-  props: ({ data: { documents = [], fetchMore } }) => ({
-    documents,
-    onSearch: searchText =>
-      fetchMore({
-        variables: { search: searchText },
-        query: Queries.DocumentsQuery,
-        updateQuery: (prev, { fetchMoreResult }) => {
-          const { documents: documentsResults = [] } = fetchMoreResult || {};
-          return {
-            ...prev,
-            documents: documentsResults
-          };
-        }
-      })
-  })
-};
-
-export default graphql(Queries.DocumentsQuery, documentsQueryConfig)(
-  DocumentsPage
-);
+export default DocumentsPage;
