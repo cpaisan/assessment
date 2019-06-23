@@ -100,8 +100,10 @@ const useStyles = makeStyles({
 });
 
 /**
- * @param {arr[obj]} documents
+ * @param {arr[obj]}
+   documents - array of document objects
  * @return {int}
+   total size of documents
  */
 const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
@@ -115,27 +117,50 @@ const deleteDocument = (documents, setDocuments) => docId =>
   setDocuments(documents.filter(({ id }) => id !== docId));
 
 /**
- * @param {func, string} setDocuments - update documents after search result is received
- * searchText - string to search document names by
+ * @async
+ * @param {func, string}
+   setDocuments - update documents after search result is received
+   searchText - string to search document names by
  * @return {Promise} returns axios promise
  */
-const onSearch = (setDocuments, setSearchError) => searchText => {
+const onSearch = (setDocuments, setSearchError) => async searchText => {
   const getUrl = `${apiUrl}/documents?name=${searchText}`;
-  return axios
-    .get(getUrl)
-    .then(({ status, data = [] }) => {
-      if (status === 200) {
-        setDocuments(data);
-        setSearchError(false);
-      }
-    })
-    .catch(err => {
-      setSearchError(true);
-    });
+  try {
+    const { status, data = [] } = await axios.get(getUrl);
+    if (status === 200) {
+      setDocuments(data);
+      setSearchError(false);
+    }
+  } catch (err) {
+    setSearchError(true);
+  }
 };
 
+/**
+ * @param {arr[obj], func, obj}
+    documents - array of documents
+    setDocuments - function to handle state update
+    newDoc - new document object
+ * @return {int}
+ */
 const handleUploadSuccess = (documents, setDocuments) => newDoc =>
   setDocuments([newDoc, ...documents]);
+
+/**
+   * @async
+   * @param {func, func}
+     setDocuments - function to update documents state
+     setError - function to update error state
+   * @return {undefined}
+   */
+const fetchData = async (setDocuments, setError) => {
+  try {
+    const { data } = await axios.get(`${apiUrl}/documents`);
+    setDocuments(data);
+  } catch (err) {
+    setError(true);
+  }
+};
 
 const DocumentsPage = props => {
   // State
@@ -145,14 +170,7 @@ const DocumentsPage = props => {
   const [searchError, setSearchError] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/documents`)
-      .then(({ data = [] }) => {
-        setDocuments(data);
-      })
-      .catch(err => {
-        setError(true);
-      });
+    fetchData(setDocuments, setError);
   }, []);
 
   const classes = useStyles();

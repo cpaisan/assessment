@@ -6,6 +6,8 @@ import TextField from "@material-ui/core/TextField";
 // Utilities
 import debounce from "lodash.debounce";
 
+// Debounce used to throttle requests to server
+// as the user types into the search input
 const documentSearch = debounce(
   (onSearch, searchText) => onSearch(searchText),
   500

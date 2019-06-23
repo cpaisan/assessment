@@ -34,6 +34,41 @@ const useStyles = makeStyles({
 // 10MB max file size
 const MAX_FILE_SIZE = 10485760;
 
+/**
+ * @async
+ * @param {obj, func, func}
+   file - image/jpg or image/png file that will be uploaded
+   handleUploadSuccess - parent component callback that will update
+   state with the new file
+   setStatus - update success or error status in state
+ * @return {undefined}
+ */
+const uploadFile = async (file, handleUploadSuccess, setStatus) => {
+  try {
+    const data = new FormData();
+    data.append("file", file);
+    const { data: newFile = {}, status } = await axios.post(
+      `${apiUrl}/document`,
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+    if (status === 200) {
+      handleUploadSuccess(newFile);
+      setStatus({ error: null, success: true });
+      return;
+    }
+  } catch (err) {
+    setStatus({
+      error: "There was an error uploading the file. Please try again.",
+      success: false
+    });
+  }
+};
+
 const UploadButton = props => {
   const { classes: upstreamClasses, handleUploadSuccess } = props;
   const classes = useStyles();
@@ -52,27 +87,7 @@ const UploadButton = props => {
       setStatus({ error: "Invalid file type.", success: false });
       return;
     }
-    const data = new FormData();
-    data.append("file", file);
-    axios
-      .post(`${apiUrl}/document`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
-      .then(({ data = {}, status }) => {
-        if (status === 200) {
-          handleUploadSuccess(data);
-          setStatus({ error: null, success: true });
-          return;
-        }
-      })
-      .catch(err =>
-        setStatus({
-          error: "There was an error uploading the file. Please try again.",
-          success: false
-        })
-      );
+    uploadFile(file, handleUploadSuccess, setStatus);
   };
 
   return (

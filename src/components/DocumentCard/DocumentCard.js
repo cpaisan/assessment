@@ -45,29 +45,37 @@ const useStyles = makeStyles({
   }
 });
 
-const handleDelete = (id, setError, deleteCallback) =>
-  axios
-    .delete(`${apiUrl}/documents/${id}`)
-    .then(({ status }) => {
-      // Check for successful document deletion
-      if (status === 200) {
-        deleteCallback && deleteCallback(id);
-      }
-    })
-    .catch(({ response }) => {
-      const { status } = response || {};
-      if (status > 400 && status < 500) {
-        setError(
-          "An error occured while trying to delete this document. Please try again."
-        );
-        return;
-      }
-      // Server error
-      if (status >= 500) {
-        setError("Please try again.");
-        return;
-      }
-    });
+/**
+ * @async
+ * @param {string, func, func}
+   id - id of deleted document
+   setError - function to update error state
+   deleteCallback - function in parent component that removes deleted
+   document from state
+ * @return {undefined}
+ */
+const handleDelete = async (id, setError, deleteCallback) => {
+  try {
+    const { status } = await axios.delete(`${apiUrl}/documents/${id}`);
+    // Check for successful document deletion
+    if (status === 200) {
+      deleteCallback && deleteCallback(id);
+    }
+  } catch ({ response }) {
+    const { status } = response || {};
+    if (status > 400 && status < 500) {
+      setError(
+        "An error occured while trying to delete this document. Please try again."
+      );
+      return;
+    }
+    // Server error
+    if (status >= 500) {
+      setError("Please try again.");
+      return;
+    }
+  }
+};
 
 const DocumentCard = ({
   doc: { name = "", size, id } = {},
