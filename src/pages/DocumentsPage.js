@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // HoC
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +10,10 @@ import Typography from "@material-ui/core/Typography";
 import Searchbar from "components/Searchbar";
 import DocumentCard from "components/DocumentCard";
 import UploadButton from "components/UploadButton";
+
+// Utilities
+import axios from "axios";
+import apiUrl from "config/constants/apiServer";
 
 const useStyles = makeStyles({
   root: {
@@ -51,6 +55,9 @@ const useStyles = makeStyles({
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
     gridGap: "15px"
+  },
+  error: {
+    color: "red"
   },
   "@media (max-width: 600px)": {
     root: {
@@ -101,9 +108,21 @@ const getTotalDocumentsSize = documents =>
 
 const DocumentsPage = props => {
   // TODO: Replace onSearch with ajax request
-  const { documents = [], onSearch } = props;
+  const { onSearch } = props;
   // State
   const [searchText, setSearchText] = useState("");
+  const [documents, setDocuments] = useState([]);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/documents`)
+      .then(({ data = [] }) => {
+        setDocuments(data);
+      })
+      .catch(err => {
+        setError(true);
+      });
+  }, []);
 
   const classes = useStyles();
   const totalSize = getTotalDocumentsSize(documents);
@@ -128,6 +147,11 @@ const DocumentsPage = props => {
         data-test-id="DocumentsPage-totalSize"
       >{`Total size: ${totalSize}kb`}</Typography>
       <div className={classes.documentContainer}>
+        {error && (
+          <Typography className={classes.error} variant="h4">
+            There was an error loading the documents.
+          </Typography>
+        )}
         {documents.map(doc => <DocumentCard doc={doc} key={doc.id} />)}
       </div>
     </div>
