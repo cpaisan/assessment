@@ -60,7 +60,12 @@ describe("Documents Page", () => {
   });
 
   it("should delete a document", () => {
-    cy._routeGraphQl("deleteDocument").as("deleteDocument");
+    cy.route({
+      url: "/documents/4",
+      method: "DELETE",
+      status: 200,
+      response: {}
+    }).as("deleteDocument");
     getTestId("DocumentCard-deleteButton-4").click();
     cy.wait("@deleteDocument");
     // Check for updated header
@@ -90,7 +95,12 @@ describe("Documents Page", () => {
   });
 
   it("should handle errors for failed deletions", () => {
-    cy._routeGraphQl("deleteDocument", "/failure.json").as("deleteDocument");
+    cy.route({
+      url: "/documents/4",
+      method: "DELETE",
+      response: { status: 422 },
+      status: 422
+    }).as("deleteDocument");
     getTestId("DocumentCard-deleteButton-4").click();
     cy.wait("@deleteDocument");
     getTestId("DocumentCard-error-4").should(
@@ -99,7 +109,13 @@ describe("Documents Page", () => {
     );
   });
 
-  it("should handle a network error", () => {
+  it("should handle a 500 from the server", () => {
+    cy.route({
+      url: "/documents/4",
+      method: "DELETE",
+      response: { status: 500 },
+      status: 500
+    }).as("deleteDocument");
     getTestId("DocumentCard-deleteButton-4").click();
     getTestId("DocumentCard-error-4").should("contain", "Please try again.");
   });
