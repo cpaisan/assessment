@@ -27,7 +27,7 @@ const route = ({ url, specifiedFixture, method }) => {
   const path = url.replace("/", "");
   const file = specifiedFixture || "index";
   const options = {
-    url: `/graphql/${path}`,
+    url: `/${path}`,
     response: `fixture:${path}/${file}`,
     method: method || "GET"
   };

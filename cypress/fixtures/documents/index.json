@@ -1,0 +1,6 @@
+[
+  { "id": "1", "name": "foo", "size": 200 },
+  { "id": "2", "name": "bar", "size": 100 },
+  { "id": "3", "name": "baz", "size": 520 },
+  { "id": "4", "name": "qux", "size": 400 }
+]

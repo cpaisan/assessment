@@ -1,4 +1,4 @@
-import documentsData from "../fixtures/graphql/documents/index.json";
+import documents from "../fixtures/documents/index.json";
 
 /**
  * @param {string} testId
@@ -12,10 +12,6 @@ const getTestId = testId => cy.get(`[data-test-id="${testId}"]`);
  */
 const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
-
-const {
-  data: { documents = [] }
-} = documentsData;
 
 const uploadFile = () =>
   cy.fixture("/images/google.jpg").then(base64String => {
@@ -33,7 +29,7 @@ const uploadFile = () =>
 
 describe("Documents Page", () => {
   beforeEach(() => {
-    cy._routeGraphQl("/documents");
+    cy._route({ url: "/documents" });
     cy.visit("/");
   });
 
