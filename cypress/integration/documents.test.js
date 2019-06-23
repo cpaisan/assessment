@@ -121,7 +121,11 @@ describe("Documents Page", () => {
   });
 
   it("should search for documents", () => {
-    cy._routeGraphQl("documents", "/bazSearch.json").as("searchDocuments");
+    cy.route({
+      url: "/documents?name=baz",
+      status: 200,
+      response: documents.filter(({ name }) => name === "baz")
+    }).as("searchDocuments");
     getTestId("Searchbar-input").type("baz");
     cy.wait("@searchDocuments");
     // Check for updated header
