@@ -26,7 +26,7 @@
     "start:mocking":
       "REACT_APP_MOCKING=on REACT_APP_ENVIRONMENT=dev react-scripts start",
     "cypress:interactive": "TZ=UTC cypress open",
-    "server:mock": "json-server --watch --port 4000 mock_api/db.json"
+    "server:mock": "nodemon mock_api/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
