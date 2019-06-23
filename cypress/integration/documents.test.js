@@ -141,7 +141,16 @@ describe("Documents Page", () => {
   });
 
   it("should upload a file", () => {
-    cy._routeGraphQl("uploadDocument").as("uploadDocument");
+    cy.route({
+      url: "/document",
+      method: "POST",
+      status: 200,
+      response: {
+        name: "google.jpg",
+        id: "8",
+        size: 100
+      }
+    }).as("uploadDocument");
     uploadFile();
 
     cy.wait("@uploadDocument");
@@ -163,9 +172,12 @@ describe("Documents Page", () => {
   });
 
   it("should handle a failed file upload", () => {
-    cy._routeGraphQl("uploadDocument", "/failedUpload.json").as(
-      "uploadDocument"
-    );
+    cy.route({
+      url: "/document",
+      method: "POST",
+      status: 422,
+      response: {}
+    }).as("uploadDocument");
     uploadFile();
 
     cy.wait("@uploadDocument");
@@ -173,10 +185,5 @@ describe("Documents Page", () => {
       "contain",
       "There was an error uploading the file. Please try again."
     );
-  });
-
-  it("should handle a server error during file upload", () => {
-    uploadFile();
-    getTestId("UploadButton-error").should("contain", "Please try again.");
   });
 });
