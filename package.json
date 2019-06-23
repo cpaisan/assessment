@@ -14,7 +14,7 @@
     "react-scripts": "3.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start & npm run server:mock",
     "build": "react-scripts build",
     "test":
       "start-server-and-test start:test http://localhost:3000/ cypress:interactive",
@@ -25,7 +25,8 @@
       "start-server-and-test start:test http://localhost:3000/ cypress:interactive",
     "start:mocking":
       "REACT_APP_MOCKING=on REACT_APP_ENVIRONMENT=dev react-scripts start",
-    "cypress:interactive": "TZ=UTC cypress open"
+    "cypress:interactive": "TZ=UTC cypress open",
+    "server:mock": "json-server --watch --port 4000 mock_api/db.json"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "cypress": "^3.3.1",
+    "json-server": "^0.15.0",
     "start-server-and-test": "^1.9.1"
   }
 }
