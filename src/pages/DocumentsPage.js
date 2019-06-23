@@ -134,6 +134,9 @@ const onSearch = (setDocuments, setSearchError) => searchText => {
     });
 };
 
+const handleUploadSuccess = (documents, setDocuments) => newDoc =>
+  setDocuments([newDoc, ...documents]);
+
 const DocumentsPage = props => {
   // State
   const [searchText, setSearchText] = useState("");
@@ -164,7 +167,10 @@ const DocumentsPage = props => {
         onChange={onSearch(setDocuments, setSearchError)}
         searchError={searchError}
       />
-      <UploadButton classes={{ root: classes.uploadButton }} />
+      <UploadButton
+        classes={{ root: classes.uploadButton }}
+        handleUploadSuccess={handleUploadSuccess(documents, setDocuments)}
+      />
       <Typography
         className={classes.header}
         variant="h3"

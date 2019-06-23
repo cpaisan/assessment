@@ -7,6 +7,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
+// Utilities
+import axios from "axios";
+import apiUrl from "config/constants/apiServer";
+
 const useStyles = makeStyles({
   root: {
     width: 120,
@@ -31,7 +35,7 @@ const useStyles = makeStyles({
 const MAX_FILE_SIZE = 10485760;
 
 const UploadButton = props => {
-  const { classes: upstreamClasses, uploadDocument } = props;
+  const { classes: upstreamClasses, handleUploadSuccess } = props;
   const classes = useStyles();
 
   const [status, setStatus] = useState({ error: null, success: false });
@@ -48,19 +52,27 @@ const UploadButton = props => {
       setStatus({ error: "Invalid file type.", success: false });
       return;
     }
-    // TODO: Replace with ajax request
-    uploadDocument(file)
-      .then(({ data: { uploadDocument: { id } = {} } = {} }) => {
-        if (id) {
+    const data = new FormData();
+    data.append("file", file);
+    axios
+      .post(`${apiUrl}/document`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      .then(({ data = {}, status }) => {
+        if (status === 200) {
+          handleUploadSuccess(data);
           setStatus({ error: null, success: true });
           return;
         }
+      })
+      .catch(err =>
         setStatus({
           error: "There was an error uploading the file. Please try again.",
           success: false
-        });
-      })
-      .catch(err => setStatus({ error: "Please try again.", success: false }));
+        })
+      );
   };
 
   return (
