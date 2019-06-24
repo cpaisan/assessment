@@ -11,7 +11,7 @@ yarn
 To start the app run:
 
 ```
-yarn start:mocking
+yarn start
 ```
 
 ## Tests
