@@ -1,4 +1,4 @@
-# Charlie Paisan - 6/23/19
+# Charlie - 6/23/19
 
 ## Installation
 
