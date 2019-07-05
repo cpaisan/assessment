@@ -1,4 +1,4 @@
-# Charlie Paisan - 6/23/19
+# Charlie - 6/23/19
 
 ## Installation
 
@@ -11,7 +11,7 @@ yarn
 To start the app run:
 
 ```
-yarn start:mocking
+yarn start
 ```
 
 ## Tests
