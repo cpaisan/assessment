@@ -42,6 +42,9 @@ const useStyles = makeStyles({
     fontSize: 10,
     color: "red",
     gridArea: "error"
+  },
+  root: {
+    height: "max-content"
   }
 });
 
@@ -85,7 +88,10 @@ const DocumentCard = ({
   const [error, setError] = useState(null);
 
   return (
-    <Card data-test-id={`DocumentCard-root-${id}`}>
+    <Card
+      data-test-id={`DocumentCard-root-${id}`}
+      classes={{ root: classes.root }}
+    >
       <CardContent classes={{ root: classes.content }}>
         <Typography
           className={classes.title}

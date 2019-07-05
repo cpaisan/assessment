@@ -63,14 +63,14 @@ const useStyles = makeStyles({
     root: {
       padding: 15,
       gridTemplateAreas: `
-        "uploadButton"
         "searchbar"
         "header"
         "totalSize"
         "documents"
+        "uploadButton"
       `,
       gridTemplateColumns: "1fr",
-      gridTemplateRows: "50px 40px 40px 30px auto",
+      gridTemplateRows: " 40px 40px 30px calc(100vh - 230px) 50px",
       gridColumnGap: "15px",
       gridRowGap: "8px",
       minWidth: 350
@@ -79,7 +79,8 @@ const useStyles = makeStyles({
       gridArea: "documents",
       display: "grid",
       gridTemplateColumns: "1fr",
-      gridGap: "15px"
+      gridGap: "15px",
+      overflowY: "auto"
     },
     totalSize: {
       gridArea: "totalSize",

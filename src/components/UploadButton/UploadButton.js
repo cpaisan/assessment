@@ -13,7 +13,7 @@ import apiUrl from "config/constants/apiServer";
 
 const useStyles = makeStyles({
   root: {
-    width: 120,
+    width: "100%",
     height: 40
   },
   input: {
