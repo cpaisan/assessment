@@ -101,10 +101,8 @@ const useStyles = makeStyles({
 });
 
 /**
- * @param {arr[obj]}
-   documents - array of document objects
- * @return {int}
-   total size of documents
+ * @param {arr[obj]} documents - array of document objects
+ * @return {int} total size of documents
  */
 const getTotalDocumentsSize = documents =>
   documents.reduce((totalSize, { size = 0 }) => (totalSize += size), 0) || 0;
